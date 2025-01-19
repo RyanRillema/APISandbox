@@ -16,6 +16,9 @@ public partial class MainViewModel : ViewModelBase
 {    
     [ObservableProperty]
     private string _output;
+    [ObservableProperty]
+    private OrderGridViewModel _orders;
+    // private string _orders;
 
     [RelayCommand]
     private async Task Go()
@@ -44,6 +47,10 @@ public partial class MainViewModel : ViewModelBase
 
                         BybitViewModel Test = JsonSerializer.Deserialize<BybitViewModel>(Output);
 
+                        Orders = new OrderGridViewModel(Test);
+                        //Orders = "Test";
+
+
                     } else
                     {
                         Output = response.StatusCode.ToString();
@@ -58,13 +65,12 @@ public partial class MainViewModel : ViewModelBase
             Output = ex.Message;            
         }
 
-    }
-
-    public ObservableCollection<OrderViewModel> Orders { get; } = new();
+    }    
 
     private Dictionary<string, string> CreateParams()
     {
         //return new() { { "api_key", "dYJedZtxQtASVNSCBW" }, { "category", "spot" }, {"recv_window","20000"},{ "timestamp", DateTime.UtcNow.ToString() } };
+        // , { "timestamp", DateTime.UtcNow.AddMonths(-2).ToString() }
         return new() { { "category", "spot" } };
     }
     

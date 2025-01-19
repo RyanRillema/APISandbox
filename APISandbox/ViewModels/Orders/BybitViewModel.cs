@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,6 +20,28 @@ namespace APISandbox.ViewModels.Orders
         public override void PopulateResponse(string Response)
         {
             throw new NotImplementedException();
+        }
+
+        public override void PopulateRJROrders(ObservableCollection<RJROrderViewModel> Orders)
+        {
+            BybitList Item;
+            RJROrderViewModel RJROrder;
+            result.list.ForEach(r => {
+                Item = r;
+                RJROrder = new RJROrderViewModel();
+                RJROrder.setID(Item.orderId);
+                RJROrder.setBasePrice(Item.basePrice);
+                RJROrder.setCumExecQty(Item.cumExecQty);
+                RJROrder.setCumExecValue(Item.cumExecValue);
+                RJROrder.setOrderStatus(Item.orderStatus);
+                RJROrder.setOrderType(Item.orderType);
+                RJROrder.setPrice(Item.price);
+                RJROrder.setQty(Item.qty);
+                RJROrder.setAvgPrice(Item.avgPrice);
+                RJROrder.setSymbol(Item.symbol);
+
+                Orders.Add(RJROrder);
+            }); 
         }
     }
 

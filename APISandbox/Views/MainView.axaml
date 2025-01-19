@@ -13,9 +13,8 @@
   </Design.DataContext>
 
   <StackPanel>
-    <Button Content="Go" Command="{Binding GoCommand}" />    
-    <TextBlock Text="{Binding Output}">
-      
-    </TextBlock>
+    <Button Content="Go" Command="{Binding GoCommand}" />
+    <ContentControl Content="{Binding Orders}" />    
+    <TextBlock Text="{Binding Output}" />
   </StackPanel>  
 </UserControl>
