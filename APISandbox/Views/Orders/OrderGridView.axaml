@@ -15,8 +15,5 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        
-        
-        <ContentControl Content="{Binding Order}" />
     </StackPanel>
 </UserControl>

@@ -7,10 +7,13 @@
              xmlns:vm="using:APISandbox.ViewModels.Orders"
              x:DataType="vm:RJROrderViewModel">
   <StackPanel>
-    <TextBlock Text="{Binding Id}" VerticalAlignment="Bottom"/>
-    <TextBlock Text="{Binding Symbol}" VerticalAlignment="Bottom"/>
-    <TextBlock Text="{Binding Ordertype}" VerticalAlignment="Bottom"/>
-    <TextBlock Text="{Binding Qty}" VerticalAlignment="Bottom"/>
-    <TextBlock Text="{Binding Price}" VerticalAlignment="Bottom"/>
+    <Grid ColumnDefinitions="100,100,100,100,100,100,100">
+        <TextBlock Text="{Binding Symbol}" Grid.Row="0" Grid.Column="0"/>
+        <TextBlock Text="{Binding Ordertype}" Grid.Row="0" Grid.Column="1"/>
+        <TextBlock Text="{Binding Orderstatus}" Grid.Row="0" Grid.Column="2"/>
+        <TextBlock Text="{Binding Qty} / {Binding Cumexecqty}" Grid.Row="0" Grid.Column="3"/>
+        <TextBlock Text="{Binding Price}" Grid.Row="0" Grid.Column="4"/>
+        <TextBlock Text="{Binding Id}" Grid.Row="0" Grid.Column="5"/>
+      </Grid>
   </StackPanel>
 </UserControl>

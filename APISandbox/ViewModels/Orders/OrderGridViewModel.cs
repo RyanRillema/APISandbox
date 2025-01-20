@@ -11,12 +11,10 @@ namespace APISandbox.ViewModels.Orders
     public partial class OrderGridViewModel : ViewModelBase
     {
         public ObservableCollection<RJROrderViewModel> OrderList { get; } = new();
-        [ObservableProperty]
-        public RJROrderViewModel _order = new();
+        
         public OrderGridViewModel(OrderViewModel SetOrder)
         {
             SetOrder.PopulateRJROrders(OrderList);
-            Order = OrderList.Last();            
         }
 
     }
