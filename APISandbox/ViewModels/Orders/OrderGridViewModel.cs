@@ -12,9 +12,9 @@ namespace APISandbox.ViewModels.Orders
     {
         public ObservableCollection<RJROrderViewModel> OrderList { get; } = new();
         
-        public OrderGridViewModel(OrderViewModel SetOrder)
+        public OrderGridViewModel(ObservableCollection<RJROrderViewModel> setOrderList)
         {
-            SetOrder.PopulateRJROrders(OrderList);
+            OrderList = setOrderList;
         }
 
     }

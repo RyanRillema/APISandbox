@@ -1,4 +1,6 @@
-﻿using APISandbox.ViewModels.Orders;
+﻿using APISandbox.Models;
+using APISandbox.Services;
+using APISandbox.ViewModels.Orders;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -32,6 +34,7 @@ public partial class MainViewModel : ViewModelBase
 
             using (HttpRequestMessage request = new())
             {
+                BybitHistoricalOrder ThisOrder = new BybitHistoricalOrder();
                 request.Method = HttpMethod.Get;
                 var payload = CreateParams();
                 var queryString = MakeString(payload);
@@ -46,9 +49,10 @@ public partial class MainViewModel : ViewModelBase
                     {
                         Output = await response.Content.ReadAsStringAsync();
 
-                        BybitViewModel Test = JsonSerializer.Deserialize<BybitViewModel>(Output);
-
-                        Orders = new OrderGridViewModel(Test);
+                        ThisOrder.OrderResult = JsonSerializer.Deserialize<BybitHistoricalOrderResult>(Output);
+                        //BybitHistoricalOrderResult Test = JsonSerializer.Deserialize<BybitHistoricalOrderResult>(Output);
+                        
+                        Orders = new OrderGridViewModel(ThisOrder.PopulateRJROrders());
 
 
                     } else
