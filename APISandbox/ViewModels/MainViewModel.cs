@@ -29,7 +29,7 @@ public partial class MainViewModel : ViewModelBase
         try
         {
             JsonSerializerOptions jsonSerializerOptions = new() { IncludeFields=true,AllowTrailingCommas=true,ReadCommentHandling=JsonCommentHandling.Skip};
-            HttpClient client = new HttpClient() { BaseAddress = new Uri("https://api.bybit.com") };
+            HttpClient client = new HttpClient() { BaseAddress = new Uri("https://api-testnet.bybit.com") };
             client.DefaultRequestHeaders.ExpectContinue = false;
 
             using (HttpRequestMessage request = new())
@@ -85,7 +85,7 @@ public partial class MainViewModel : ViewModelBase
 
     private Dictionary<string, string> CreateParams()
     {
-        //return new() { { "api_key", "dYJedZtxQtASVNSCBW" }, { "category", "spot" }, {"recv_window","20000"},{ "timestamp", DateTime.UtcNow.ToString() } };
+        //return new() { { "api_key", "BqvWkuqyIrWRosPqO6" }, { "category", "spot" }, {"recv_window","20000"},{ "timestamp", DateTime.UtcNow.ToString() } };
         // , { "timestamp", DateTime.UtcNow.AddMonths(-2).ToString() }
         return new() { { "category", Category } };
     }
@@ -93,8 +93,8 @@ public partial class MainViewModel : ViewModelBase
     protected HttpRequestMessage AddGetRequestHeadersForAuthentication(HttpRequestMessage request, string body)
     {
         string timestamp = Convert.ToInt64((DateTime.UtcNow - new DateTime(1970, 01, 01)).TotalMilliseconds).ToString();
-        string message = $"{timestamp}dYJedZtxQtASVNSCBW{20000}{body}";
-        request.Headers.Add("X-BAPI-API-KEY", "dYJedZtxQtASVNSCBW");
+        string message = $"{timestamp}BqvWkuqyIrWRosPqO6{20000}{body}";
+        request.Headers.Add("X-BAPI-API-KEY", "BqvWkuqyIrWRosPqO6");
         request.Headers.Add("X-BAPI-RECV-WINDOW", "20000");
         request.Headers.Add("X-BAPI-SIGN", CreateSign(message));
         request.Headers.Add("X-BAPI-TIMESTAMP", timestamp);
@@ -103,7 +103,7 @@ public partial class MainViewModel : ViewModelBase
 
     protected string CreateSign(string message)
     {
-        byte[] keyByte = Encoding.UTF8.GetBytes("XBOoyJQV0EfvfKMLfa2AkNzkev1A3DFWbtDS");
+        byte[] keyByte = Encoding.UTF8.GetBytes("sqsi3jSERbvMifgZ6ViB28Suyt3Qj7A9dLiv");
         byte[] messageBytes = Encoding.UTF8.GetBytes(message);
 
         byte[] signatureBytes = null;
