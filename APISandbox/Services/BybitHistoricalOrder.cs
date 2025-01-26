@@ -19,6 +19,7 @@ namespace APISandbox.Services
             HistoricalOrder historicalOrder = new HistoricalOrder();
             
             OrderResult.result.list.ForEach(r => {
+                historicalOrder = new HistoricalOrder();
                 historicalOrder.id = r.orderId;
                 historicalOrder.baseprice = r.basePrice;
                 historicalOrder.cumexecqty = r.cumExecQty;
