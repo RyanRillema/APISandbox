@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using APISandbox.Models;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,63 +12,21 @@ namespace APISandbox.ViewModels.Orders
     public partial class RJROrderViewModel : ViewModelBase
     {
 
-        public RJROrderViewModel() { }
+        public RJROrderViewModel(HistoricalOrder setOrder)
+        {
+            Id = setOrder.id;
+            Timestamp = setOrder.timestamp;
+            Symbol = setOrder.symbol;
+            Ordertype = setOrder.ordertype;
+            Avgprice = setOrder.avgprice;
+            Price = setOrder.price;
+            Orderstatus = setOrder.orderstatus;
+            Cumexecvalue = setOrder.cumexecvalue;
+            Baseprice = setOrder.baseprice;
+            Cumexecqty  = setOrder.cumexecqty;
+            Qty = setOrder.qty;
+        }
         
-        public void setID(string id)
-        {
-            Id = id;
-        }
-
-        public void setTimeStamp(string timestamp)
-        {
-            Timestamp = timestamp;
-        }
-        
-        public void setSymbol(string symbol)
-        {
-            Symbol = symbol;
-        }
-
-        public void setOrderType(string OrderType)
-        {
-            Ordertype = OrderType;
-        }
-
-        public void setAvgPrice(string AvgPrice)
-        {
-            Avgprice = AvgPrice;
-        }
-
-        public void setPrice(string setPrice)
-        {
-            Price = setPrice;
-        }
-
-        public void setOrderStatus(string OrderStatus)
-        {
-            Orderstatus = OrderStatus;
-        }
-
-        public void setCumExecValue(string CumExecValue)
-        {
-            Cumexecvalue = CumExecValue;
-        }
-
-        public void setBasePrice(string BasePrice)
-        {
-            Baseprice = BasePrice;
-        }
-
-        public void setCumExecQty(string CumExecQty)
-        {
-            Cumexecqty = CumExecQty;
-        }
-
-        public void setQty(string setQty)
-        {
-            Qty = setQty;
-        }
-
         [ObservableProperty]
         private string _id;
         [ObservableProperty]

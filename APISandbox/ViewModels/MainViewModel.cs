@@ -19,7 +19,7 @@ public partial class MainViewModel : ViewModelBase
     [ObservableProperty]
     private string _output;
     [ObservableProperty]
-    private OrderGridViewModel _orders;
+    private OrderGridViewModel _ordersView;
     [ObservableProperty]
     private string _category = "spot";
 
@@ -28,6 +28,7 @@ public partial class MainViewModel : ViewModelBase
     {
         try
         {
+            var Orders = new List<HistoricalOrder>();
             JsonSerializerOptions jsonSerializerOptions = new() { IncludeFields=true,AllowTrailingCommas=true,ReadCommentHandling=JsonCommentHandling.Skip};
             HttpClient client = new HttpClient() { BaseAddress = new Uri("https://api-testnet.bybit.com") };
             client.DefaultRequestHeaders.ExpectContinue = false;
@@ -50,9 +51,10 @@ public partial class MainViewModel : ViewModelBase
                         Output = await response.Content.ReadAsStringAsync();
 
                         ThisOrder.OrderResult = JsonSerializer.Deserialize<BybitHistoricalOrderResult>(Output);
-                        //BybitHistoricalOrderResult Test = JsonSerializer.Deserialize<BybitHistoricalOrderResult>(Output);
-                        
-                        Orders = new OrderGridViewModel(ThisOrder.PopulateRJROrders());
+
+                        Orders = ThisOrder.PopulateHistoricalOrders();
+
+                        OrdersView = new OrderGridViewModel(Orders);
 
 
                     } else

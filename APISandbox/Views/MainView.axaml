@@ -19,7 +19,7 @@
         <Button Content="{Binding Category}" Command="{Binding SwitchCategoryCommand}" Grid.Row="1" Grid.Column="0" />
       </Grid>
       <Grid RowDefinitions="Auto, 50"  Grid.Row="0" Grid.Column="1">
-        <ContentControl Content="{Binding Orders}" Grid.Row="0" Grid.Column="0"/>    
+        <ContentControl Content="{Binding OrdersView}" Grid.Row="0" Grid.Column="0"/>    
         <TextBlock Text="{Binding Output}" Grid.Row="1" Grid.Column="0"/>
       </Grid>
     </Grid>

@@ -1,4 +1,5 @@
-﻿using APISandbox.ViewModels.Orders;
+﻿using APISandbox.Models;
+using APISandbox.ViewModels.Orders;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,6 +11,6 @@ namespace APISandbox.Interfaces
 {
     public interface IHistoricalOrder
     {
-        ObservableCollection<RJROrderViewModel> PopulateRJROrders();
+        List<HistoricalOrder> PopulateHistoricalOrders();
     }
 }

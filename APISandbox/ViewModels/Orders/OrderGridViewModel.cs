@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using APISandbox.Models;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,9 +13,15 @@ namespace APISandbox.ViewModels.Orders
     {
         public ObservableCollection<RJROrderViewModel> OrderList { get; } = new();
         
-        public OrderGridViewModel(ObservableCollection<RJROrderViewModel> setOrderList)
+        public OrderGridViewModel(List<HistoricalOrder> setOrderList)
         {
-            OrderList = setOrderList;
+            RJROrderViewModel setOrder;
+            foreach (var item in setOrderList)
+            {
+                setOrder = new RJROrderViewModel(item);
+                OrderList.Add(setOrder);
+            }
+
         }
 
     }

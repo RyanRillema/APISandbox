@@ -13,29 +13,26 @@ namespace APISandbox.Services
     public class BybitHistoricalOrder : IHistoricalOrder
     {
         public BybitHistoricalOrderResult OrderResult;
-        public ObservableCollection<RJROrderViewModel> PopulateRJROrders()
+        public List<HistoricalOrder> PopulateHistoricalOrders()
         {
-            var RJROverList = new ObservableCollection<RJROrderViewModel>();
-
-            BybitHistoricalOrder Item;
-            RJROrderViewModel RJROrder;
+            var historicalOrderList = new List<HistoricalOrder>();
+            HistoricalOrder historicalOrder = new HistoricalOrder();
+            
             OrderResult.result.list.ForEach(r => {
-                RJROrder = new RJROrderViewModel();
-                RJROrder.setID(r.orderId);
-                RJROrder.setBasePrice(r.basePrice);
-                RJROrder.setCumExecQty(r.cumExecQty);
-                RJROrder.setCumExecValue(r.cumExecValue);
-                RJROrder.setOrderStatus(r.orderStatus);
-                RJROrder.setOrderType(r.orderType);
-                RJROrder.setPrice(r.price);
-                RJROrder.setQty(r.qty);
-                RJROrder.setAvgPrice(r.avgPrice);
-                RJROrder.setSymbol(r.symbol);
-
-                RJROverList.Add(RJROrder);
+                historicalOrder.id = r.orderId;
+                historicalOrder.baseprice = r.basePrice;
+                historicalOrder.cumexecqty = r.cumExecQty;
+                historicalOrder.cumexecvalue = r.cumExecValue;
+                historicalOrder.orderstatus = r.orderStatus;
+                historicalOrder.ordertype = r.orderType;
+                historicalOrder.price = r.price;
+                historicalOrder.qty = r.qty;
+                historicalOrder.avgprice = r.avgPrice;
+                historicalOrder.symbol = r.symbol;
+                historicalOrderList.Add(historicalOrder);
             });
 
-            return RJROverList;
+            return historicalOrderList;
         }
     }
 }
