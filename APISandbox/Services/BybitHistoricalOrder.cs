@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace APISandbox.Services
@@ -13,6 +14,7 @@ namespace APISandbox.Services
     public class BybitHistoricalOrder : IHistoricalOrder
     {
         public BybitHistoricalOrderResult OrderResult;
+
         public List<HistoricalOrder> PopulateHistoricalOrders()
         {
             var historicalOrderList = new List<HistoricalOrder>();
@@ -34,6 +36,11 @@ namespace APISandbox.Services
             });
 
             return historicalOrderList;
+        }
+
+        public void PopulateOrderResult(string Output)
+        {
+            OrderResult = JsonSerializer.Deserialize<BybitHistoricalOrderResult>(Output);
         }
     }
 }

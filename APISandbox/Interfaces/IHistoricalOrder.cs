@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 namespace APISandbox.Interfaces
 {
     public interface IHistoricalOrder
-    {
+    {        
+        void PopulateOrderResult(String Output);
         List<HistoricalOrder> PopulateHistoricalOrders();
     }
 }
