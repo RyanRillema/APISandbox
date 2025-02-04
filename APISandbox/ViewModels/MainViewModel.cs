@@ -19,11 +19,4 @@ public partial class MainViewModel : ViewModelBase
 {
     [ObservableProperty]
     private OrderGridViewModel _ordersView = new OrderGridViewModel();
-    
-
-    [RelayCommand]
-    private async Task Go()
-    {
-        OrdersView.GetOrderHistory();
-    }
 }
