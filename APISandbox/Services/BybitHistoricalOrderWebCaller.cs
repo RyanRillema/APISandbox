@@ -1,5 +1,6 @@
 ﻿using APISandbox.Interfaces;
 using APISandbox.Models;
+using APISandbox.ViewModels.Orders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,55 @@ namespace APISandbox.Services
 {
     public class BybitHistoricalOrderWebCaller : IHistoricalOrderWebCaller
     {
-        HistoricalOrderWebCallerParams thisParams;
-        public BybitHistoricalOrderWebCaller(HistoricalOrderWebCallerParams setParams)
+        HistoricalOrderWebCallerParams _params =  new HistoricalOrderWebCallerParams();
+        IHistoricalOrder _order = new BybitHistoricalOrder();
+        
+        public BybitHistoricalOrderWebCaller()
         {
-            thisParams = setParams;
+            
         }
-        public HttpRequestMessage SetupRequest(HttpRequestMessage setRequest)
+        public async Task<List<HistoricalOrder>> GetOrderHistory(HistoricalOrderWebCallerParams setParams)
+        {
+            _params = setParams;
+            List<HistoricalOrder> orders;
+            string webCallResult = await WebCall();
+            orders = _order.PopulateHistoricalOrders(webCallResult);
+
+            return orders;
+        }
+        public async Task<String> WebCall()
+        {
+            string output;
+
+            try
+            {
+                HttpClient client = getClient();
+
+                using (HttpRequestMessage request = new())
+                {
+                    SetupRequest(request);
+
+                    using (HttpResponseMessage response = await client.SendAsync(request))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            output = await response.Content.ReadAsStringAsync();
+                        }
+                        else
+                        {
+                            output = response.StatusCode.ToString();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                output = ex.Message;
+            }
+            return output;
+        }
+        
+        private HttpRequestMessage SetupRequest(HttpRequestMessage setRequest)
         {
             var payload = CreateParams();
             var queryString = MakeString(payload);
@@ -28,7 +72,15 @@ namespace APISandbox.Services
 
             return setRequest;
         }
-        public HttpRequestMessage AddGetRequestHeadersForAuthentication(HttpRequestMessage request, string body)
+        private HttpClient getClient()
+        {
+            HttpClient client = new HttpClient() { BaseAddress = new Uri("https://api-testnet.bybit.com") };
+            client.DefaultRequestHeaders.ExpectContinue = false;
+
+            return client;
+        }
+
+        private HttpRequestMessage AddGetRequestHeadersForAuthentication(HttpRequestMessage request, string body)
         {
             string timestamp = Convert.ToInt64((DateTime.UtcNow - new DateTime(1970, 01, 01)).TotalMilliseconds).ToString();
             string message = $"{timestamp}BqvWkuqyIrWRosPqO6{20000}{body}";
@@ -39,15 +91,15 @@ namespace APISandbox.Services
             return request;
         }
 
-        public Dictionary<string, string> CreateParams()
+        private Dictionary<string, string> CreateParams()
         {
             //return new() { { "api_key", "BqvWkuqyIrWRosPqO6" }, { "category", "spot" }, {"recv_window","20000"},{ "timestamp", DateTime.UtcNow.ToString() } };
             // , { "timestamp", DateTime.UtcNow.AddMonths(-2).ToString() }
-            string test = thisParams.Category.ToString();
-            return new() { { "category", test } };
+            string category = _params.Category.ToString();
+            return new() { { "category", _params.Category.ToString() } };
         }
 
-        public string CreateSign(string message)
+        private string CreateSign(string message)
         {
             byte[] keyByte = Encoding.UTF8.GetBytes("sqsi3jSERbvMifgZ6ViB28Suyt3Qj7A9dLiv");
             byte[] messageBytes = Encoding.UTF8.GetBytes(message);
@@ -64,27 +116,18 @@ namespace APISandbox.Services
             return hex.ToString();
         }
 
-        public Uri CreateUri(string queryString)
+        private Uri CreateUri(string queryString)
         {
             return new System.Uri($"/v5/order/history?{queryString}", UriKind.Relative);
-        }
-
-        public HttpClient getClient()
-        {            
-            HttpClient client = new HttpClient() { BaseAddress = new Uri("https://api-testnet.bybit.com") };
-            client.DefaultRequestHeaders.ExpectContinue = false;
-
-            return client;
-        }
-
-        public JsonSerializerOptions getJsonSerializerOptions()
+        }       
+        private JsonSerializerOptions GetJsonSerializerOptions()
         {
             JsonSerializerOptions jsonSerializerOptions = new() { IncludeFields = true, AllowTrailingCommas = true, ReadCommentHandling = JsonCommentHandling.Skip };
 
             return jsonSerializerOptions;
         }
 
-        protected string MakeString(Dictionary<string, string> parms, bool escapeStrings = false)
+        private string MakeString(Dictionary<string, string> parms, bool escapeStrings = false)
         {
             if (parms == null)
                 return "";
@@ -110,5 +153,6 @@ namespace APISandbox.Services
             return string.Join("&", list);
         }
 
+        
     }
 }

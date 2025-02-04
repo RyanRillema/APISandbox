@@ -13,34 +13,29 @@ namespace APISandbox.Services
 {
     public class BybitHistoricalOrder : IHistoricalOrder
     {
-        public BybitHistoricalOrderResult OrderResult;
-
-        public List<HistoricalOrder> PopulateHistoricalOrders()
+        public List<HistoricalOrder> PopulateHistoricalOrders(string output)
         {
-            var historicalOrderList = new List<HistoricalOrder>();
-            HistoricalOrder historicalOrder = new HistoricalOrder();
-            
-            OrderResult.result.list.ForEach(r => {
-                historicalOrder = new HistoricalOrder();
-                historicalOrder.id = r.orderId;
-                historicalOrder.baseprice = r.basePrice;
-                historicalOrder.cumexecqty = r.cumExecQty;
-                historicalOrder.cumexecvalue = r.cumExecValue;
-                historicalOrder.orderstatus = r.orderStatus;
-                historicalOrder.ordertype = r.orderType;
-                historicalOrder.price = r.price;
-                historicalOrder.qty = r.qty;
-                historicalOrder.avgprice = r.avgPrice;
-                historicalOrder.symbol = r.symbol;
-                historicalOrderList.Add(historicalOrder);
+            var _historicalOrderList = new List<HistoricalOrder>();
+            HistoricalOrder _historicalOrder = new HistoricalOrder();
+            BybitHistoricalOrderResult _orderResult = JsonSerializer.Deserialize<BybitHistoricalOrderResult>(output);
+
+            _orderResult.Result.List.ForEach(r =>
+            {
+                _historicalOrder = new HistoricalOrder();
+                _historicalOrder.Id = r.OrderId;
+                _historicalOrder.Baseprice = r.BasePrice;
+                _historicalOrder.Cumexecqty = r.CumExecQty;
+                _historicalOrder.Cumexecvalue = r.CumExecValue;
+                _historicalOrder.Orderstatus = r.OrderStatus;
+                _historicalOrder.Ordertype = r.OrderType;
+                _historicalOrder.Price = r.Price;
+                _historicalOrder.Qty = r.Qty;
+                _historicalOrder.Avgprice = r.AvgPrice;
+                _historicalOrder.Symbol = r.Symbol;
+                _historicalOrderList.Add(_historicalOrder);
             });
 
-            return historicalOrderList;
-        }
-
-        public void PopulateOrderResult(string Output)
-        {
-            OrderResult = JsonSerializer.Deserialize<BybitHistoricalOrderResult>(Output);
+            return _historicalOrderList;
         }
     }
 }

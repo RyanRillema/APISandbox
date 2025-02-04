@@ -14,17 +14,17 @@ namespace APISandbox.ViewModels.Orders
 
         public RJROrderViewModel(HistoricalOrder setOrder)
         {
-            Id = setOrder.id;
-            Timestamp = setOrder.timestamp;
-            Symbol = setOrder.symbol;
-            Ordertype = setOrder.ordertype;
-            Avgprice = setOrder.avgprice;
-            Price = setOrder.price;
-            Orderstatus = setOrder.orderstatus;
-            Cumexecvalue = setOrder.cumexecvalue;
-            Baseprice = setOrder.baseprice;
-            Cumexecqty  = setOrder.cumexecqty;
-            Qty = setOrder.qty;
+            Id = setOrder.Id;
+            Timestamp = setOrder.Timestamp;
+            Symbol = setOrder.Symbol;
+            Ordertype = setOrder.Ordertype;
+            Avgprice = setOrder.Avgprice;
+            Price = setOrder.Price;
+            Orderstatus = setOrder.Orderstatus;
+            Cumexecvalue = setOrder.Cumexecvalue;
+            Baseprice = setOrder.Baseprice;
+            Cumexecqty  = setOrder.Cumexecqty;
+            Qty = setOrder.Qty;
         }
         
         [ObservableProperty]

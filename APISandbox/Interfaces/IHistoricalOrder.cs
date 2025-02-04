@@ -11,7 +11,6 @@ namespace APISandbox.Interfaces
 {
     public interface IHistoricalOrder
     {        
-        void PopulateOrderResult(String Output);
-        List<HistoricalOrder> PopulateHistoricalOrders();
+        List<HistoricalOrder> PopulateHistoricalOrders(string output);
     }
 }

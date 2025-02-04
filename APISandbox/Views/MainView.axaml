@@ -13,15 +13,6 @@
   </Design.DataContext>
 
   <StackPanel>
-    <Grid ColumnDefinitions="200,Auto">
-      <Grid RowDefinitions="50,Auto,Auto"  Grid.Row="0" Grid.Column="0">
-        <Button Content="Go" Command="{Binding GoCommand}" Grid.Row="0" Grid.Column="0" />
-        <Button Content="{Binding ECategory}" Command="{Binding SwitchCategoryCommand}" Grid.Row="1" Grid.Column="0" />
-      </Grid>
-      <Grid RowDefinitions="Auto, 50"  Grid.Row="0" Grid.Column="1">
-        <ContentControl Content="{Binding OrdersView}" Grid.Row="0" Grid.Column="0"/>    
-        <TextBlock Text="{Binding Output}" Grid.Row="1" Grid.Column="0"/>
-      </Grid>
-    </Grid>
+    <ContentControl Content="{Binding OrdersView}" Grid.Row="0" Grid.Column="0"/>
   </StackPanel>  
 </UserControl>

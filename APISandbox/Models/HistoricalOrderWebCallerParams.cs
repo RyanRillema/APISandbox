@@ -15,7 +15,7 @@ namespace APISandbox.Models
 
         public Category Category;
 
-        public HistoricalOrderWebCallerParams(Category setCategory)
+        public HistoricalOrderWebCallerParams(Category setCategory = Category.spot)
         {
             Category = setCategory;
         }

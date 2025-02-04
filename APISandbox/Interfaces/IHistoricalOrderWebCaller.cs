@@ -11,13 +11,7 @@ namespace APISandbox.Interfaces
 {
     public interface IHistoricalOrderWebCaller
     {
-        HttpRequestMessage SetupRequest(HttpRequestMessage setRequest);
-        HttpClient getClient();
-        JsonSerializerOptions getJsonSerializerOptions();
-        Dictionary<string, string> CreateParams();
-        HttpRequestMessage AddGetRequestHeadersForAuthentication(HttpRequestMessage request, string body);
-        string CreateSign(string message);
-        Uri CreateUri(string queryString);
+        Task<List<HistoricalOrder>> GetOrderHistory(HistoricalOrderWebCallerParams _params);
 
     }
 }

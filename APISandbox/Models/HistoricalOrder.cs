@@ -9,17 +9,17 @@ namespace APISandbox.Models
 {
     public class HistoricalOrder
     {
-        public string id;
-        public string timestamp;
-        public string symbol;
-        public string ordertype;
-        public string avgprice;
-        public string price;
-        public string orderstatus;
-        public string cumexecvalue;
-        public string baseprice;
-        public string cumexecfee;
-        public string cumexecqty;
-        public string qty;
+        public string Id;
+        public string Timestamp;
+        public string Symbol;
+        public string Ordertype;
+        public string Avgprice;
+        public string Price;
+        public string Orderstatus;
+        public string Cumexecvalue;
+        public string Baseprice;
+        public string Cumexecfee;
+        public string Cumexecqty;
+        public string Qty;
     }
 }

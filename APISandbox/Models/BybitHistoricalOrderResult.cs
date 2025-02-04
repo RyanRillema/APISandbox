@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace APISandbox.Models
@@ -9,68 +10,67 @@ namespace APISandbox.Models
 
     public class BybitHistoricalOrderResult
     {
-        public double retCode { get; set; }
-        public string retMsg { get; set; }
-        public BybitResult result { get; set; }
-        public object retExtInfo { get; set; }
-        public double time { get; set; }
+        [JsonPropertyName("retCode")] public double RetCode { get; set; }
+        [JsonPropertyName("retMsg")] public string RetMsg { get; set; }
+        [JsonPropertyName("result")] public BybitResult Result { get; set; }
+        [JsonPropertyName("retExtInfo")] public object RetExtInfo { get; set; }
+        [JsonPropertyName("time")] public double Time { get; set; }
 
         public class BybitResult
         {
-            public string nextPageCursor { get; set; }
-            public string category { get; set; }
-            public List<BybitHistoricalOrder> list { get; set; }
+            [JsonPropertyName("nextPageCursor")] public string NextPageCursor { get; set; }
+            [JsonPropertyName("category")] public string Category { get; set; }
+            [JsonPropertyName("list")] public List<BybitHistoricalOrder> List { get; set; }
 
         }
 
         public class BybitHistoricalOrder
         {
-            public string symbol { get; set; }
-            public string orderType { get; set; }
-            public string orderLinkId { get; set; }
-            public string slLimitPrice { get; set; }
-            public string orderId { get; set; }
-            public string cancelType { get; set; }
-            public string avgPrice { get; set; }
-            public string stopOrderType { get; set; }
-            public string lastPriceOnCreated { get; set; }
-            public string orderStatus { get; set; }
-            public string takeProfit { get; set; }
-            public string cumExecValue { get; set; }
-            public string smpType { get; set; }
-            public int triggerDirection { get; set; }
-            public string blockTradeId { get; set; }
-            public string rejectReason { get; set; }
-            public string isLeverage { get; set; }
-            public string price { get; set; }
-            public string orderIv { get; set; }
-            public string createdTime { get; set; }
-            public string tpTriggerBy { get; set; }
-            public int positionIdx { get; set; }
-            public string trailingPercentage { get; set; }
-            public string timeInForce { get; set; }
-            public string leavesValue { get; set; }
-            public string basePrice { get; set; }
-            public string updatedTime { get; set; }
-            public string side { get; set; }
-            public int smpGroup { get; set; }
-            public string triggerPrice { get; set; }
-            public string tpLimitPrice { get; set; }
-            public string trailingValue { get; set; }
-            public string cumExecFee { get; set; }
-            public string slTriggerBy { get; set; }
-            public string leavesQty { get; set; }
-            public bool closeOnTrigger { get; set; }
-            public string placeType { get; set; }
-            public string cumExecQty { get; set; }
-            public bool reduceOnly { get; set; }
-            public string activationPrice { get; set; }
-            public string qty { get; set; }
-            public string stopLoss { get; set; }
-            public string marketUnit { get; set; }
-            public string smpOrderId { get; set; }
-
-            public string triggerBy { get; set; }
+            [JsonPropertyName("symbol")] public string Symbol { get; set; }
+            [JsonPropertyName("orderType")] public string OrderType { get; set; }
+            [JsonPropertyName("orderLinkId")] public string OrderLinkId { get; set; }
+            [JsonPropertyName("slLimitPrice")] public string SlLimitPrice { get; set; }
+            [JsonPropertyName("orderId")] public string OrderId { get; set; }
+            [JsonPropertyName("cancelType")] public string CancelType { get; set; }
+            [JsonPropertyName("avgPrice")] public string AvgPrice { get; set; }
+            [JsonPropertyName("stopOrderType")] public string StopOrderType { get; set; }
+            [JsonPropertyName("lastPriceOnCreated")] public string LastPriceOnCreated { get; set; }
+            [JsonPropertyName("orderStatus")] public string OrderStatus { get; set; }
+            [JsonPropertyName("takeProfit")] public string TakeProfit { get; set; }
+            [JsonPropertyName("cumExecValue")] public string CumExecValue { get; set; }
+            [JsonPropertyName("smpType")] public string SmpType { get; set; }
+            [JsonPropertyName("triggerDirection")] public int TriggerDirection { get; set; }
+            [JsonPropertyName("blockTradeId")] public string BlockTradeId { get; set; }
+            [JsonPropertyName("rejectReason")] public string RejectReason { get; set; }
+            [JsonPropertyName("isLeverage")] public string IsLeverage { get; set; }
+            [JsonPropertyName("price")] public string Price { get; set; }
+            [JsonPropertyName("orderIv")] public string OrderIv { get; set; }
+            [JsonPropertyName("createdTime")] public string CreatedTime { get; set; }
+            [JsonPropertyName("tpTriggerBy")] public string TpTriggerBy { get; set; }
+            [JsonPropertyName("positionIdx")] public int PositionIdx { get; set; }
+            [JsonPropertyName("trailingPercentage")] public string TrailingPercentage { get; set; }
+            [JsonPropertyName("timeInForce")] public string TimeInForce { get; set; }
+            [JsonPropertyName("leavesValue")] public string LeavesValue { get; set; }
+            [JsonPropertyName("basePrice")] public string BasePrice { get; set; }
+            [JsonPropertyName("updatedTime")] public string UpdatedTime { get; set; }
+            [JsonPropertyName("side")] public string Side { get; set; }
+            [JsonPropertyName("smpGroup")] public int SmpGroup { get; set; }
+            [JsonPropertyName("triggerPrice")] public string TriggerPrice { get; set; }
+            [JsonPropertyName("tpLimitPrice")] public string TpLimitPrice { get; set; }
+            [JsonPropertyName("trailingValue")] public string TrailingValue { get; set; }
+            [JsonPropertyName("cumExecFee")] public string CumExecFee { get; set; }
+            [JsonPropertyName("slTriggerBy")] public string SlTriggerBy { get; set; }
+            [JsonPropertyName("leavesQty")] public string LeavesQty { get; set; }
+            [JsonPropertyName("closeOnTrigger")] public bool CloseOnTrigger { get; set; }
+            [JsonPropertyName("placeType")] public string PlaceType { get; set; }
+            [JsonPropertyName("cumExecQty")] public string CumExecQty { get; set; }
+            [JsonPropertyName("reduceOnly")] public bool ReduceOnly { get; set; }
+            [JsonPropertyName("activationPrice")] public string ActivationPrice { get; set; }
+            [JsonPropertyName("qty")] public string Qty { get; set; }
+            [JsonPropertyName("stopLoss")] public string StopLoss { get; set; }
+            [JsonPropertyName("marketUnit")] public string MarketUnit { get; set; }
+            [JsonPropertyName("smpOrderId")] public string SmpOrderId { get; set; }
+            [JsonPropertyName("triggerBy")] public string TriggerBy { get; set; }
         }
     }
 }
