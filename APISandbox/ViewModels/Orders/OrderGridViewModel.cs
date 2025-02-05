@@ -20,7 +20,8 @@ namespace APISandbox.ViewModels.Orders
         private Category _category = Models.Category.spot;
 
         HistoricalOrderWebCallerParams _orderParams = new HistoricalOrderWebCallerParams();
-        IHistoricalOrderWebCaller _orderWebCaller = new BybitHistoricalOrderWebCaller();
+        //IHistoricalOrderWebCaller _orderWebCaller = new BybitHistoricalOrderWebCaller();
+        IHistoricalOrderWebCaller _orderWebCaller = new BitMexHistoricalOrderWebCaller();
 
         public OrderGridViewModel()
         {
