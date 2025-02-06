@@ -36,21 +36,21 @@ namespace APISandbox.ViewModels.Orders
         [ObservableProperty]
         private string _ordertype;
         [ObservableProperty]
-        private string _avgprice;
+        private double _avgprice;
         [ObservableProperty]
-        private string _price;
+        private double _price;
         [ObservableProperty]
         private string _orderstatus;
         [ObservableProperty]
-        private string _cumexecvalue;
+        private double _cumexecvalue;
         [ObservableProperty]
-        private string _baseprice;
+        private double _baseprice;
         [ObservableProperty]
-        private string _cumexecfee;
+        private double _cumexecfee;
         [ObservableProperty]
-        private string _cumexecqty;
+        private double _cumexecqty;
         [ObservableProperty]
-        private string _qty;
+        private double _qty;
 
     }
 }

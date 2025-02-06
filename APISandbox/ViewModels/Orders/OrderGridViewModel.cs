@@ -14,19 +14,24 @@ namespace APISandbox.ViewModels.Orders
 {
     public partial class OrderGridViewModel : ViewModelBase
     {
-        public ObservableCollection<RJROrderViewModel> OrderList { get; } = new();
         public ObservableCollection<Category> CategoryList { get; } = new();
+        public ObservableCollection<Exchange> ExchangeList { get; } = new();
+        public ObservableCollection<RJROrderViewModel> OrderList { get; } = new();
+
         [ObservableProperty]
         private Category _category = Models.Category.spot;
+        [ObservableProperty]
+        private Exchange _exchange = Models.Exchange.BitMex;
 
         HistoricalOrderWebCallerParams _orderParams = new HistoricalOrderWebCallerParams();
-        //IHistoricalOrderWebCaller _orderWebCaller = new BybitHistoricalOrderWebCaller();
-        IHistoricalOrderWebCaller _orderWebCaller = new BitMexHistoricalOrderWebCaller();
+        IHistoricalOrderWebCaller _orderWebCaller; // = new BitMexHistoricalOrderWebCaller();
 
         public OrderGridViewModel()
         {
             CategoryList.Add(Models.Category.spot);
             CategoryList.Add(Models.Category.linear);
+            ExchangeList.Add(Models.Exchange.Bybit);
+            ExchangeList.Add(Models.Exchange.BitMex);
         }
 
         [RelayCommand]
@@ -34,6 +39,16 @@ namespace APISandbox.ViewModels.Orders
         {
             List<HistoricalOrder> orders;
             SetParamsForWebCall();
+            
+            if (Exchange==Exchange.Bybit)
+            {
+                _orderWebCaller = new BybitHistoricalOrderWebCaller(); ;
+            }
+            else if(Exchange == Exchange.BitMex)
+            {
+                _orderWebCaller = new BitMexHistoricalOrderWebCaller();
+            }
+
             orders = await _orderWebCaller.GetOrderHistory(_orderParams);
 
             OrderList.Clear();

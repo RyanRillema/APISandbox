@@ -13,13 +13,13 @@ namespace APISandbox.Models
         public string Timestamp;
         public string Symbol;
         public string Ordertype;
-        public string Avgprice;
-        public string Price;
+        public double Avgprice;
+        public double Price;
         public string Orderstatus;
-        public string Cumexecvalue;
-        public string Baseprice;
-        public string Cumexecfee;
-        public string Cumexecqty;
-        public string Qty;
+        public double Cumexecvalue;
+        public double Baseprice;
+        public double Cumexecfee;
+        public double Cumexecqty;
+        public double Qty;
     }
 }

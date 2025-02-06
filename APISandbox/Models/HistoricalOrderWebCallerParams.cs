@@ -10,14 +10,20 @@ namespace APISandbox.Models
     {
         spot,linear
     }
+    public enum Exchange
+    {
+        Bybit, BitMex
+    }
     public class HistoricalOrderWebCallerParams
     {
 
         public Category Category;
+        public Exchange Exchange;
 
-        public HistoricalOrderWebCallerParams(Category setCategory = Category.spot)
+        public HistoricalOrderWebCallerParams(Category setCategory = Category.spot, Exchange setExchange = Exchange.BitMex)
         {
             Category = setCategory;
+            Exchange = setExchange;
         }
 
     }

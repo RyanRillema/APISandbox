@@ -23,14 +23,14 @@ namespace APISandbox.Services
             {
                 _historicalOrder = new HistoricalOrder();
                 _historicalOrder.Id = r.OrderId;
-                _historicalOrder.Baseprice = r.BasePrice;
-                _historicalOrder.Cumexecqty = r.CumExecQty;
-                _historicalOrder.Cumexecvalue = r.CumExecValue;
+                _historicalOrder.Baseprice = Double.Parse(r.BasePrice);
+                _historicalOrder.Cumexecqty = Double.Parse(r.CumExecQty);
+                _historicalOrder.Cumexecvalue = Double.Parse(r.CumExecValue);
                 _historicalOrder.Orderstatus = r.OrderStatus;
                 _historicalOrder.Ordertype = r.OrderType;
-                _historicalOrder.Price = r.Price;
-                _historicalOrder.Qty = r.Qty;
-                _historicalOrder.Avgprice = r.AvgPrice;
+                _historicalOrder.Price = Double.Parse(r.Price);
+                _historicalOrder.Qty = Double.Parse(r.Qty);
+                _historicalOrder.Avgprice = Double.Parse(r.AvgPrice);
                 _historicalOrder.Symbol = r.Symbol;
                 _historicalOrderList.Add(_historicalOrder);
             });

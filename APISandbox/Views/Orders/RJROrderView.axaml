@@ -7,7 +7,7 @@
              xmlns:vm="using:APISandbox.ViewModels.Orders"
              x:DataType="vm:RJROrderViewModel">
   <StackPanel>
-    <Grid ColumnDefinitions="100,100,100,100,100,100,100">
+    <Grid ColumnDefinitions="100,100,100,100,200,100,200">
         <TextBlock Text="{Binding Symbol}" Grid.Row="0" Grid.Column="0"/>
         <TextBlock Text="{Binding Ordertype}" Grid.Row="0" Grid.Column="1"/>
         <TextBlock Text="{Binding Orderstatus}" Grid.Row="0" Grid.Column="2"/>
