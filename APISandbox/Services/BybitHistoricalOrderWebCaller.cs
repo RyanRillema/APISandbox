@@ -30,7 +30,7 @@ namespace APISandbox.Services
 
             return orders;
         }
-        public async Task<String> WebCall()
+        private async Task<String> WebCall()
         {
             string output;
 
@@ -61,7 +61,6 @@ namespace APISandbox.Services
             }
             return output;
         }
-        
         private HttpRequestMessage SetupRequest(HttpRequestMessage setRequest)
         {
             var payload = CreateParams();
@@ -79,7 +78,6 @@ namespace APISandbox.Services
 
             return client;
         }
-
         private HttpRequestMessage AddGetRequestHeadersForAuthentication(HttpRequestMessage request, string body)
         {
             string timestamp = Convert.ToInt64((DateTime.UtcNow - new DateTime(1970, 01, 01)).TotalMilliseconds).ToString();
@@ -90,7 +88,6 @@ namespace APISandbox.Services
             request.Headers.Add("X-BAPI-TIMESTAMP", timestamp);
             return request;
         }
-
         private Dictionary<string, string> CreateParams()
         {
             //return new() { { "api_key", "BqvWkuqyIrWRosPqO6" }, { "category", "spot" }, {"recv_window","20000"},{ "timestamp", DateTime.UtcNow.ToString() } };
@@ -98,7 +95,6 @@ namespace APISandbox.Services
             string category = _params.Category.ToString();
             return new() { { "category", _params.Category.ToString() } };
         }
-
         private string CreateSign(string message)
         {
             byte[] keyByte = Encoding.UTF8.GetBytes("sqsi3jSERbvMifgZ6ViB28Suyt3Qj7A9dLiv");
@@ -115,18 +111,10 @@ namespace APISandbox.Services
 
             return hex.ToString();
         }
-
         private Uri CreateUri(string queryString)
         {
             return new System.Uri($"/v5/order/history?{queryString}", UriKind.Relative);
         }       
-        private JsonSerializerOptions GetJsonSerializerOptions()
-        {
-            JsonSerializerOptions jsonSerializerOptions = new() { IncludeFields = true, AllowTrailingCommas = true, ReadCommentHandling = JsonCommentHandling.Skip };
-
-            return jsonSerializerOptions;
-        }
-
         private string MakeString(Dictionary<string, string> parms, bool escapeStrings = false)
         {
             if (parms == null)
@@ -153,6 +141,5 @@ namespace APISandbox.Services
             return string.Join("&", list);
         }
 
-        
     }
 }

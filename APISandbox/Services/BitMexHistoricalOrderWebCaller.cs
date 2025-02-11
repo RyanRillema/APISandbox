@@ -3,14 +3,11 @@ using APISandbox.Models;
 using APISandbox.ViewModels.Orders;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace APISandbox.Services 
@@ -28,114 +25,142 @@ namespace APISandbox.Services
         {
             _params = setParams;
             List<HistoricalOrder> orders;
-            var output = GetOrders();            
+            string output = await WebCall();            
             orders = _order.PopulateHistoricalOrders(output);
             return orders;
         }
-        private string BuildQueryData(Dictionary<string, string> param)
-            {
-            if (param == null)
-                return "";
-
-            StringBuilder b = new StringBuilder();
-            foreach (var item in param)
-                b.Append(string.Format("&{0}={1}", item.Key, WebUtility.UrlEncode(item.Value)));
-
-            try { return b.ToString().Substring(1); }
-            catch (Exception) { return ""; }
-        }
-
-        private string BuildJSON(Dictionary<string, string> param)
+        
+        private async Task<string> WebCall()
         {
-            if (param == null)
-                return "";
-
-            var entries = new List<string>();
-            foreach (var item in param)
-                entries.Add(string.Format("\"{0}\":\"{1}\"", item.Key, item.Value));
-
-            return "{" + string.Join(",", entries) + "}";
-        }
-
-        public static string ByteArrayToString(byte[] ba)
-        {
-            StringBuilder hex = new StringBuilder(ba.Length * 2);
-            foreach (byte b in ba)
-                hex.AppendFormat("{0:x2}", b);
-            return hex.ToString();
-        }
-
-        private long GetExpires()
-        {
-            return DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 3600; // set expires one hour in the future
-        }
-
-        private string Query(string method, string function, Dictionary<string, string> param, bool auth = false, bool json = false)
-        {
-            string paramData = json ? BuildJSON(param) : BuildQueryData(param);
-            string url = "/api/v1" + function + ((method == "GET" && paramData != "") ? "?" + paramData : "");
-            string postData = (method != "GET") ? paramData : "";
-
-            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create("https://testnet.bitmex.com" + url);
-            webRequest.Method = method;
-
-            if (auth)
-            {
-                string expires = GetExpires().ToString();
-                string message = method + url + expires + postData;
-                byte[] signatureBytes = hmacsha256(Encoding.UTF8.GetBytes("rMeqAzEGaGSLJGphWsUjou-_49-uyzK5wmxnoqnzoAAczeCD"), Encoding.UTF8.GetBytes(message));
-                string signatureString = ByteArrayToString(signatureBytes);
-
-                webRequest.Headers.Add("api-expires", expires);
-                webRequest.Headers.Add("api-key", "ZSbLa4SnZk5zh4r08wnPw7RM");
-                webRequest.Headers.Add("api-signature", signatureString);
-            }
+            string output;
 
             try
             {
-                if (postData != "")
-                {
-                    webRequest.ContentType = json ? "application/json" : "application/x-www-form-urlencoded";
-                    var data = Encoding.UTF8.GetBytes(postData);
-                    using (var stream = webRequest.GetRequestStream())
-                    {
-                        stream.Write(data, 0, data.Length);
-                    }
-                }
+                HttpClient client = getClient();
 
-                using (WebResponse webResponse = webRequest.GetResponse())
-                using (Stream str = webResponse.GetResponseStream())
-                using (StreamReader sr = new StreamReader(str))
+                using (HttpRequestMessage request = new())
                 {
-                    return sr.ReadToEnd();
-                }
-            }
-            catch (WebException wex)
-            {
-                using (HttpWebResponse response = (HttpWebResponse)wex.Response)
-                {
-                    if (response == null)
-                        throw;
+                    SetupRequest(request);
 
-                    using (Stream str = response.GetResponseStream())
+                    using (HttpResponseMessage response = await client.SendAsync(request))
                     {
-                        using (StreamReader sr = new StreamReader(str))
+                        if (response.IsSuccessStatusCode)
                         {
-                            return sr.ReadToEnd();
+                            output = await response.Content.ReadAsStringAsync();
+                        }
+                        else
+                        {
+                            output = response.StatusCode.ToString();
                         }
                     }
                 }
             }
-        }
+            catch (Exception ex)
+            {
+                output = ex.Message;
+            }
 
-        public List<BitMexHistoricalOrderResult> GetOrderBook(string symbol, int depth)
+            return output;
+        }
+        private HttpRequestMessage SetupRequest(HttpRequestMessage setRequest)
+        {
+            var payload = CreateParams();
+            var queryString = MakeString(payload);
+            setRequest.Method = HttpMethod.Get;
+            setRequest.RequestUri = CreateUri(queryString);
+            AddGetRequestHeadersForAuthentication(setRequest, queryString);
+
+            return setRequest;
+        }
+        private HttpClient getClient()
+        {
+            HttpClient client = new HttpClient() { BaseAddress = new Uri("https://testnet.bitmex.com") };
+            client.DefaultRequestHeaders.ExpectContinue = false;
+
+            return client;
+        }
+        private HttpRequestMessage AddGetRequestHeadersForAuthentication(HttpRequestMessage request, string body)
+        {
+            string expires = GetExpires().ToString();
+            string message = "GET" + request.RequestUri + expires + body;
+            string signatureString = CreateSign(message);
+
+            request.Headers.Add("api-expires", expires);
+            request.Headers.Add("api-key", "ZSbLa4SnZk5zh4r08wnPw7RM");
+            request.Headers.Add("api-signature", signatureString);
+
+            return request;
+        }
+        private Dictionary<string, string> CreateParams()
         {
             var param = new Dictionary<string, string>();
-            param["symbol"] = symbol;
-            param["depth"] = depth.ToString();
-            string res = Query("GET", "/orderBook", param);
-            return JsonSerializer.Deserialize<List<BitMexHistoricalOrderResult>>(res);
-            //return JsonSerializer.DeserializeFromString<List<BitMexHistoricalOrderResult2>>(res);
+            //param["symbol"] = "BTCUSD";
+            //param["filter"] = "{\"open\":true}";
+            //param["columns"] = "";
+            //param["count"] = 100.ToString();
+            //param["start"] = 0.ToString();
+            //param["reverse"] = false.ToString();
+            //param["startTime"] = "";
+            //param["endTime"] = "";
+
+            //string category = _params.Category.ToString();
+
+            return param;
+        }
+        private string CreateSign(string message)
+        {
+            byte[] keyByte = Encoding.UTF8.GetBytes("rMeqAzEGaGSLJGphWsUjou-_49-uyzK5wmxnoqnzoAAczeCD");
+            byte[] messageBytes = Encoding.UTF8.GetBytes(message);
+
+            byte[] signatureBytes = null;
+            using (var hash = new HMACSHA256(keyByte))
+                signatureBytes = hash.ComputeHash(messageBytes);
+
+            var hex = new StringBuilder(signatureBytes.Length * 2);
+
+            foreach (var b in signatureBytes)
+                hex.AppendFormat("{0:x2}", b);
+
+            return hex.ToString();
+        }
+        private Uri CreateUri(string queryString)
+        {
+            //string url = "/api/v1" + function + ((method == "GET" && paramData != "") ? "?" + paramData : "");
+            string url = "/api/v1/order?" + queryString;
+
+            //return new System.Uri($"/v5/order/history?{queryString}", UriKind.Relative);
+            return new System.Uri($"{url}", UriKind.Relative);
+        }
+        private string MakeString(Dictionary<string, string> parms, bool escapeStrings = false)
+        {
+            if (parms == null)
+                return "";
+
+            Func<object, string> getString = delegate (object value)
+            {
+                if (value is bool)
+                    return value.ToString().ToLower();
+
+                if (value is Enum myEnum)
+                    value = myEnum.ToString();
+
+                if (escapeStrings && value is string)
+                    return $"\"{value}\"";
+
+                return value.ToString();
+            };
+
+            var list = new List<string>();
+            foreach (var parm in parms)
+                list.Add($"{getString(parm.Key)}={getString(parm.Value)}");
+
+            return string.Join("&", list);
+        }
+        
+        //TODO
+        private long GetExpires()
+        {
+            return DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 3600; // set expires one hour in the future
         }
 
         public string GetOrders()
@@ -149,7 +174,8 @@ namespace APISandbox.Services
             //param["reverse"] = false.ToString();
             //param["startTime"] = "";
             //param["endTime"] = "";
-            return Query("GET", "/order", param, true);
+            //return Query("GET", "/order", param, true);
+            return "";
         }
 
         public string PostOrders()
@@ -159,7 +185,8 @@ namespace APISandbox.Services
             param["side"] = "Buy";
             param["orderQty"] = "1";
             param["ordType"] = "Market";
-            return Query("POST", "/order", param, true);
+            //return Query("POST", "/order", param, true);
+            return "";
         }
 
         public string DeleteOrders()
@@ -167,35 +194,10 @@ namespace APISandbox.Services
             var param = new Dictionary<string, string>();
             param["orderID"] = "de709f12-2f24-9a36-b047-ab0ff090f0bb";
             param["text"] = "cancel order by ID";
-            return Query("DELETE", "/order", param, true, true);
+            //return Query("DELETE", "/order", param, true, true);
+            return "";
         }
-
-        private byte[] hmacsha256(byte[] keyByte, byte[] messageBytes)
-        {
-            using (var hash = new HMACSHA256(keyByte))
-            {
-                return hash.ComputeHash(messageBytes);
-            }
-        }
-
-        #region RateLimiter
-
-        private long lastTicks = 0;
-        private object thisLock = new object();
-
-        private void RateLimit()
-        {
-            lock (thisLock)
-            {
-                long elapsedTicks = DateTime.Now.Ticks - lastTicks;
-                var timespan = new TimeSpan(elapsedTicks);
-                if (timespan.TotalMilliseconds < 5000)
-                    Thread.Sleep(5000 - (int)timespan.TotalMilliseconds);
-                lastTicks = DateTime.Now.Ticks;
-            }
-        }
-
-        #endregion RateLimiter
+                
         }
 
     }
