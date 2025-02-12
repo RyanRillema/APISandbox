@@ -10,13 +10,22 @@ namespace APISandbox.Models
 
     public class BybitHistoricalOrderResult
     {
+        //RC: This is a region and can be collapsed for easier reading
+        #region Sub classes
+
+        
+
+        #endregion
+        
         [JsonPropertyName("retCode")] public double RetCode { get; set; }
         [JsonPropertyName("retMsg")] public string RetMsg { get; set; }
         [JsonPropertyName("result")] public BybitResult Result { get; set; }
         [JsonPropertyName("retExtInfo")] public object RetExtInfo { get; set; }
         [JsonPropertyName("time")] public double Time { get; set; }
 
-        public class BybitResult
+        //RC: I seldom use classes inside of classes but I think I actually kind of like this.
+        //I would rather define them in a region at the top of the class though
+        public class BybitResult //RC: Maybe rename this class to something more descriptive
         {
             [JsonPropertyName("nextPageCursor")] public string NextPageCursor { get; set; }
             [JsonPropertyName("category")] public string Category { get; set; }
@@ -24,7 +33,7 @@ namespace APISandbox.Models
 
         }
 
-        public class BybitHistoricalOrder
+        public class BybitHistoricalOrder //RC: I like this class being named BybitHistoricalOrder. That is what it defines. I think the other BybitHistoricalOrder class should be renamed
         {
             [JsonPropertyName("symbol")] public string Symbol { get; set; }
             [JsonPropertyName("orderType")] public string OrderType { get; set; }

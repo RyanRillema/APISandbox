@@ -11,11 +11,13 @@ using System.Threading.Tasks;
 
 namespace APISandbox.Services
 {
+    //RC: Same comment as the BitMexHistoricalOrder, not sure BybitHistoricalOrder is the right name
     public class BybitHistoricalOrder : IHistoricalOrder
     {
         public List<HistoricalOrder> PopulateHistoricalOrders(string output)
         {
-            var _historicalOrderList = new List<HistoricalOrder>();
+            //RC: variables in methods shouldn't have _ in their name
+            var _historicalOrderList = new List<HistoricalOrder>(); 
             HistoricalOrder _historicalOrder = new HistoricalOrder();
             BybitHistoricalOrderResult _orderResult = JsonSerializer.Deserialize<BybitHistoricalOrderResult>(output);
 

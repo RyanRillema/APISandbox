@@ -11,7 +11,7 @@ namespace APISandbox.Interfaces
 {
     public interface IHistoricalOrderWebCaller
     {
-        Task<List<HistoricalOrder>> GetOrderHistory(HistoricalOrderWebCallerParams _params);
+        Task<List<HistoricalOrder>> GetOrderHistory(HistoricalOrderWebCallerParams _params); //method parameters don't use _ in the name
 
     }
 }

@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 
 namespace APISandbox.Models
 {
+    //RC: Is this BitMexHistoricalOrderResult class being used?
     public class BitMexHistoricalOrderResult
     {
         [JsonPropertyName("list")] public List<BitMexHistoricalOrderResultOrder> List { get; set; }
     }
-        public class BitMexHistoricalOrderResultOrder
+    
+    public class BitMexHistoricalOrderResultOrder
     {
         [JsonPropertyName("account")] public float Account { get; set; }
         [JsonPropertyName("avgPx")] public float AvgPx { get; set; }
@@ -31,6 +33,4 @@ namespace APISandbox.Models
         [JsonPropertyName("transactTime")] public string TransactTime { get; set; }
         [JsonPropertyName("workingIndicator")] public bool WorkingIndicator { get; set; }
     }
-    
-
 }

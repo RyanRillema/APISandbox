@@ -14,20 +14,28 @@ namespace APISandbox.Services
 {
     public class BitMexHistoricalOrderWebCaller : IHistoricalOrderWebCaller
     {
-        HistoricalOrderWebCallerParams _params =  new HistoricalOrderWebCallerParams();
+        private const string _testnetBaseUrl = "https://testnet.bitmex.com";
+        
+        HistoricalOrderWebCallerParams _params =  new HistoricalOrderWebCallerParams(); //RC: It doesn't look like params are actually getting used at the moment
         IHistoricalOrder _order = new BitMexHistoricalOrder();
 
+        //RC: You don't need to explicitly add a constructor if it's a parameterless constructor.
         public BitMexHistoricalOrderWebCaller()
         {
 
         }
-        public async Task<List<HistoricalOrder>> GetOrderHistory(HistoricalOrderWebCallerParams setParams)
+        public async Task<List<HistoricalOrder>> GetOrderHistory(HistoricalOrderWebCallerParams setParams) //RC: why is this name setParams and not just params?
         {
             _params = setParams;
             List<HistoricalOrder> orders;
             string output = await WebCall();            
             orders = _order.PopulateHistoricalOrders(output);
             return orders;
+            
+            //RC: The above could also be written as below
+            // _params = setParams;
+            // var output = await WebCall();            
+            // return _order.PopulateHistoricalOrders(output);
         }
         
         private async Task<string> WebCall()
@@ -40,7 +48,7 @@ namespace APISandbox.Services
 
                 using (HttpRequestMessage request = new())
                 {
-                    SetupRequest(request);
+                    SetupRequest(request); //RC: SetupRequest returns a value but you don't use it. Should that not be void?
 
                     using (HttpResponseMessage response = await client.SendAsync(request))
                     {
@@ -62,18 +70,19 @@ namespace APISandbox.Services
 
             return output;
         }
-        private HttpRequestMessage SetupRequest(HttpRequestMessage setRequest)
+        private HttpRequestMessage SetupRequest(HttpRequestMessage setRequest) //RC: not sure what the set here means?
         {
             var payload = CreateParams();
             var queryString = MakeString(payload);
             setRequest.Method = HttpMethod.Get;
             setRequest.RequestUri = CreateUri(queryString);
-            AddGetRequestHeadersForAuthentication(setRequest, queryString);
+            AddGetRequestHeadersForAuthentication(setRequest, queryString);  //RC: AddGetRequestHeadersForAuthentication returns a value but you don't use it. Should that not be void?
 
             return setRequest;
         }
-        private HttpClient getClient()
+        private HttpClient getClient() //RC: Method name should be GetClient
         {
+            //RC: static or constant strings should be defined in variables at the top of the class. see _testnetBaseUrl
             HttpClient client = new HttpClient() { BaseAddress = new Uri("https://testnet.bitmex.com") };
             client.DefaultRequestHeaders.ExpectContinue = false;
 
@@ -133,6 +142,9 @@ namespace APISandbox.Services
         }
         private string MakeString(Dictionary<string, string> parms, bool escapeStrings = false)
         {
+            //RC: I don't think this method needs to be this complex.
+            //Your dictionary is of type string, string which means  value in the getString Func will always end up being escaped
+            //Not sure if you're expecting to change the dictionary to cater for more complex types. Maybe it needs to be <string, object>
             if (parms == null)
                 return "";
 
@@ -163,7 +175,7 @@ namespace APISandbox.Services
             return DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 3600; // set expires one hour in the future
         }
 
-        public string GetOrders()
+        public string GetOrders() //RC: Don't think this is being used
         {
             var param = new Dictionary<string, string>();
             //param["symbol"] = "BTCUSD";
@@ -178,7 +190,7 @@ namespace APISandbox.Services
             return "";
         }
 
-        public string PostOrders()
+        public string PostOrders() //RC: Don't think this is being used
         {
             var param = new Dictionary<string, string>();
             param["symbol"] = "XBTUSD";
@@ -189,7 +201,7 @@ namespace APISandbox.Services
             return "";
         }
 
-        public string DeleteOrders()
+        public string DeleteOrders() //RC: Don't think this is being used
         {
             var param = new Dictionary<string, string>();
             param["orderID"] = "de709f12-2f24-9a36-b047-ab0ff090f0bb";

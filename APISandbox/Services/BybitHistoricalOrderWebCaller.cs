@@ -14,14 +14,17 @@ namespace APISandbox.Services
 {
     public class BybitHistoricalOrderWebCaller : IHistoricalOrderWebCaller
     {
+        //RC: This class is very similar to the BitMexHistoricalOrderWebCaller class.
+        //I don't see anything sepcific to this class that I want to comment on but many of the comments from 
+        //BitMexHistoricalOrderWebCaller apply here too
         HistoricalOrderWebCallerParams _params =  new HistoricalOrderWebCallerParams();
         IHistoricalOrder _order = new BybitHistoricalOrder();
         
-        public BybitHistoricalOrderWebCaller()
+        public BybitHistoricalOrderWebCaller() 
         {
             
         }
-        public async Task<List<HistoricalOrder>> GetOrderHistory(HistoricalOrderWebCallerParams setParams)
+        public async Task<List<HistoricalOrder>> GetOrderHistory(HistoricalOrderWebCallerParams setParams) 
         {
             _params = setParams;
             List<HistoricalOrder> orders;
