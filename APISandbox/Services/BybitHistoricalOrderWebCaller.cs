@@ -1,37 +1,26 @@
 ﻿using APISandbox.Interfaces;
 using APISandbox.Models;
-using APISandbox.ViewModels.Orders;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace APISandbox.Services
 {
     public class BybitHistoricalOrderWebCaller : IHistoricalOrderWebCaller
     {
-        //RC: This class is very similar to the BitMexHistoricalOrderWebCaller class.
-        //I don't see anything sepcific to this class that I want to comment on but many of the comments from 
-        //BitMexHistoricalOrderWebCaller apply here too
-        HistoricalOrderWebCallerParams _params =  new HistoricalOrderWebCallerParams();
-        IHistoricalOrder _order = new BybitHistoricalOrder();
-        
-        public BybitHistoricalOrderWebCaller() 
-        {
-            
-        }
-        public async Task<List<HistoricalOrder>> GetOrderHistory(HistoricalOrderWebCallerParams setParams) 
-        {
-            _params = setParams;
-            List<HistoricalOrder> orders;
-            string webCallResult = await WebCall();
-            orders = _order.PopulateHistoricalOrders(webCallResult);
+        private const string _testnetBaseUrl = "https://api-testnet.bybit.com";
 
-            return orders;
+        HistoricalOrderWebCallerParams _params =  new HistoricalOrderWebCallerParams();
+        IOrderFactory _order = new BybitOrderFactory();
+                
+        public async Task<List<HistoricalOrder>> GetOrderHistory(HistoricalOrderWebCallerParams parameters) 
+        {
+            _params = parameters;
+            var output = await WebCall();
+            return _order.PopulateHistoricalOrders(output);
         }
         private async Task<String> WebCall()
         {
@@ -39,7 +28,7 @@ namespace APISandbox.Services
 
             try
             {
-                HttpClient client = getClient();
+                HttpClient client = GetClient();
 
                 using (HttpRequestMessage request = new())
                 {
@@ -64,24 +53,22 @@ namespace APISandbox.Services
             }
             return output;
         }
-        private HttpRequestMessage SetupRequest(HttpRequestMessage setRequest)
+        private void SetupRequest(HttpRequestMessage request)
         {
             var payload = CreateParams();
             var queryString = MakeString(payload);
-            setRequest.Method = HttpMethod.Get;
-            setRequest.RequestUri = CreateUri(queryString);
-            AddGetRequestHeadersForAuthentication(setRequest, queryString);
-
-            return setRequest;
+            request.Method = HttpMethod.Get;
+            request.RequestUri = CreateUri(queryString);
+            AddGetRequestHeadersForAuthentication(request, queryString);
         }
-        private HttpClient getClient()
+        private HttpClient GetClient()
         {
-            HttpClient client = new HttpClient() { BaseAddress = new Uri("https://api-testnet.bybit.com") };
+            HttpClient client = new HttpClient() { BaseAddress = new Uri(_testnetBaseUrl) };
             client.DefaultRequestHeaders.ExpectContinue = false;
 
             return client;
         }
-        private HttpRequestMessage AddGetRequestHeadersForAuthentication(HttpRequestMessage request, string body)
+        private void AddGetRequestHeadersForAuthentication(HttpRequestMessage request, string body)
         {
             string timestamp = Convert.ToInt64((DateTime.UtcNow - new DateTime(1970, 01, 01)).TotalMilliseconds).ToString();
             string message = $"{timestamp}BqvWkuqyIrWRosPqO6{20000}{body}";
@@ -89,7 +76,6 @@ namespace APISandbox.Services
             request.Headers.Add("X-BAPI-RECV-WINDOW", "20000");
             request.Headers.Add("X-BAPI-SIGN", CreateSign(message));
             request.Headers.Add("X-BAPI-TIMESTAMP", timestamp);
-            return request;
         }
         private Dictionary<string, string> CreateParams()
         {

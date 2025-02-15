@@ -1,13 +1,10 @@
 ﻿using APISandbox.Interfaces;
 using APISandbox.Models;
-using APISandbox.ViewModels.Orders;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace APISandbox.Services 
@@ -16,39 +13,27 @@ namespace APISandbox.Services
     {
         private const string _testnetBaseUrl = "https://testnet.bitmex.com";
         
-        HistoricalOrderWebCallerParams _params =  new HistoricalOrderWebCallerParams(); //RC: It doesn't look like params are actually getting used at the moment
-        IHistoricalOrder _order = new BitMexHistoricalOrder();
-
-        //RC: You don't need to explicitly add a constructor if it's a parameterless constructor.
-        public BitMexHistoricalOrderWebCaller()
+        HistoricalOrderWebCallerParams _params =  new HistoricalOrderWebCallerParams();
+        IOrderFactory _order = new BitMexOrderFactory();
+                
+        public async Task<List<HistoricalOrder>> GetOrderHistory(HistoricalOrderWebCallerParams parameters)
         {
+            _params = parameters;
+            var output = await WebCall();            
+            return _order.PopulateHistoricalOrders(output);
+        }
 
-        }
-        public async Task<List<HistoricalOrder>> GetOrderHistory(HistoricalOrderWebCallerParams setParams) //RC: why is this name setParams and not just params?
-        {
-            _params = setParams;
-            List<HistoricalOrder> orders;
-            string output = await WebCall();            
-            orders = _order.PopulateHistoricalOrders(output);
-            return orders;
-            
-            //RC: The above could also be written as below
-            // _params = setParams;
-            // var output = await WebCall();            
-            // return _order.PopulateHistoricalOrders(output);
-        }
-        
         private async Task<string> WebCall()
         {
             string output;
 
             try
             {
-                HttpClient client = getClient();
+                HttpClient client = GetClient();
 
                 using (HttpRequestMessage request = new())
                 {
-                    SetupRequest(request); //RC: SetupRequest returns a value but you don't use it. Should that not be void?
+                    SetupRequest(request);
 
                     using (HttpResponseMessage response = await client.SendAsync(request))
                     {
@@ -70,25 +55,22 @@ namespace APISandbox.Services
 
             return output;
         }
-        private HttpRequestMessage SetupRequest(HttpRequestMessage setRequest) //RC: not sure what the set here means?
+        private void SetupRequest(HttpRequestMessage request)
         {
             var payload = CreateParams();
             var queryString = MakeString(payload);
-            setRequest.Method = HttpMethod.Get;
-            setRequest.RequestUri = CreateUri(queryString);
-            AddGetRequestHeadersForAuthentication(setRequest, queryString);  //RC: AddGetRequestHeadersForAuthentication returns a value but you don't use it. Should that not be void?
-
-            return setRequest;
+            request.Method = HttpMethod.Get;
+            request.RequestUri = CreateUri(queryString);
+            AddGetRequestHeadersForAuthentication(request, queryString);
         }
-        private HttpClient getClient() //RC: Method name should be GetClient
+        private HttpClient GetClient()
         {
-            //RC: static or constant strings should be defined in variables at the top of the class. see _testnetBaseUrl
-            HttpClient client = new HttpClient() { BaseAddress = new Uri("https://testnet.bitmex.com") };
+            HttpClient client = new HttpClient() { BaseAddress = new Uri(_testnetBaseUrl) };
             client.DefaultRequestHeaders.ExpectContinue = false;
 
             return client;
         }
-        private HttpRequestMessage AddGetRequestHeadersForAuthentication(HttpRequestMessage request, string body)
+        private void AddGetRequestHeadersForAuthentication(HttpRequestMessage request, string body)
         {
             string expires = GetExpires().ToString();
             string message = "GET" + request.RequestUri + expires + body;
@@ -97,8 +79,6 @@ namespace APISandbox.Services
             request.Headers.Add("api-expires", expires);
             request.Headers.Add("api-key", "ZSbLa4SnZk5zh4r08wnPw7RM");
             request.Headers.Add("api-signature", signatureString);
-
-            return request;
         }
         private Dictionary<string, string> CreateParams()
         {
@@ -175,7 +155,7 @@ namespace APISandbox.Services
             return DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 3600; // set expires one hour in the future
         }
 
-        public string GetOrders() //RC: Don't think this is being used
+        public string GetOrders()
         {
             var param = new Dictionary<string, string>();
             //param["symbol"] = "BTCUSD";
@@ -190,7 +170,7 @@ namespace APISandbox.Services
             return "";
         }
 
-        public string PostOrders() //RC: Don't think this is being used
+        public string PostOrders()
         {
             var param = new Dictionary<string, string>();
             param["symbol"] = "XBTUSD";
@@ -201,7 +181,7 @@ namespace APISandbox.Services
             return "";
         }
 
-        public string DeleteOrders() //RC: Don't think this is being used
+        public string DeleteOrders()
         {
             var param = new Dictionary<string, string>();
             param["orderID"] = "de709f12-2f24-9a36-b047-ab0ff090f0bb";

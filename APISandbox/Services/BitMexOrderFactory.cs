@@ -9,14 +9,11 @@ using System.Threading.Tasks;
 
 namespace APISandbox.Services
 {
-    //RC: I would change this guys name. It works with BitMexHistoricalOrders but it itself is not a BitMexHistoricalOrder
-    //There is a good change if you do other historical data you'll use this class to translate those pocos as well
-    public class BitMexHistoricalOrder : IHistoricalOrder 
+    public class BitMexOrderFactory : IOrderFactory 
     {
         public List<HistoricalOrder> PopulateHistoricalOrders(string output)
         {
-            //RC: variables in methods shouldn't have _ in their name
-            var _historicalOrderList = new List<HistoricalOrder>(); 
+            var historicalOrderList = new List<HistoricalOrder>(); 
             HistoricalOrder _historicalOrder = new HistoricalOrder(); 
             List<BitMexHistoricalOrderResultOrder> _orderResult = JsonSerializer.Deserialize<List<BitMexHistoricalOrderResultOrder>>(output);
 
@@ -33,10 +30,10 @@ namespace APISandbox.Services
                 _historicalOrder.Qty = r.OrderQty;
                 _historicalOrder.Avgprice = r.AvgPx;
                 _historicalOrder.Symbol = r.Symbol;
-                _historicalOrderList.Add(_historicalOrder);
+                historicalOrderList.Add(_historicalOrder);
             });
 
-            return _historicalOrderList;
+            return historicalOrderList;
         }
     }
 }

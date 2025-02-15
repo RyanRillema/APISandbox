@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace APISandbox.Models
 {
-    //RC: Is this BitMexHistoricalOrderResult class being used?
-    public class BitMexHistoricalOrderResult
-    {
-        [JsonPropertyName("list")] public List<BitMexHistoricalOrderResultOrder> List { get; set; }
-    }
-    
     public class BitMexHistoricalOrderResultOrder
     {
         [JsonPropertyName("account")] public float Account { get; set; }
