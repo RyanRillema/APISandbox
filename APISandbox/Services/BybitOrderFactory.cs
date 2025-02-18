@@ -32,5 +32,10 @@ namespace APISandbox.Services
 
             return historicalOrderList;
         }
+
+        public List<Instrument> PopulateInstrumentList(string output)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

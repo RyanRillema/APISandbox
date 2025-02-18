@@ -16,16 +16,23 @@ namespace APISandbox.Services
         private const string _testnetBaseUrl = "https://testnet.bitmex.com";
         
         HistoricalOrderWebCallerParams _params =  new HistoricalOrderWebCallerParams();
-        IOrderFactory _order = new BitMexOrderFactory();
+        IOrderFactory _orderFactory = new BitMexOrderFactory();
                 
         public async Task<List<HistoricalOrder>> GetOrderHistory(HistoricalOrderWebCallerParams parameters)
         {
             _params = parameters;
-            var output = await WebCall();            
-            return _order.PopulateHistoricalOrders(output);
+            var output = await OrderWebCall();            
+            return _orderFactory.PopulateHistoricalOrders(output);
         }
 
-        private async Task<string> WebCall()
+        public async Task<List<Instrument>> GetSymbols()
+        {
+            var output = await InstrementWebCall();
+
+            return _orderFactory.PopulateInstrumentList(output);
+        }
+
+        private async Task<string> OrderWebCall()
         {
             string output;
 
@@ -57,6 +64,43 @@ namespace APISandbox.Services
 
             return output;
         }
+        private async Task<string> InstrementWebCall()
+        {
+            string output;
+
+            try
+            {
+                HttpClient client = GetClient();
+
+                using (HttpRequestMessage request = new())
+                {
+                    //SetupRequest(request);
+                    request.Method = HttpMethod.Get;
+                    string url = _testnetBaseUrl + "/api/v1/instrument/active";
+                    request.RequestUri = new System.Uri(url);
+                    //AddGetRequestHeadersForAuthentication(request, queryString);
+
+                    using (HttpResponseMessage response = await client.SendAsync(request))
+                    {
+                        if (response.IsSuccessStatusCode)
+                        {
+                            output = await response.Content.ReadAsStringAsync();
+                        }
+                        else
+                        {
+                            output = response.StatusCode.ToString();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                output = ex.Message;
+            }
+
+            return output;
+        }
+
         private void SetupRequest(HttpRequestMessage request)
         {
             var payload = CreateParams();
@@ -194,7 +238,7 @@ namespace APISandbox.Services
             //return Query("DELETE", "/order", param, true, true);
             return "";
         }
-                
-        }
+
+    }
 
     }

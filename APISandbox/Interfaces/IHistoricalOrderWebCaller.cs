@@ -8,5 +8,7 @@ namespace APISandbox.Interfaces
     {
         Task<List<HistoricalOrder>> GetOrderHistory(HistoricalOrderWebCallerParams parameters);
 
+        Task<List<Instrument>> GetSymbols();
+
     }
 }

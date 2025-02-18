@@ -38,6 +38,8 @@ namespace APISandbox.ViewModels.Orders
             CategoryList.Add(Category.linear);
             ExchangeList.Add(Exchange.Bybit);
             ExchangeList.Add(Exchange.BitMex);
+
+            GetInstruments();
         }
 
         [RelayCommand]
@@ -71,7 +73,27 @@ namespace APISandbox.ViewModels.Orders
                 OrderList.Add(setOrder);
             }
         }
+        public async Task GetInstruments()
+        {
+            List<Instrument> instruments;
+            SetParamsForWebCall();
 
+            if (Exchange == Exchange.Bybit)
+            {
+                _orderWebCaller = new BybitHistoricalOrderWebCaller(); ;
+            }
+            else if (Exchange == Exchange.BitMex)
+            {
+                _orderWebCaller = new BitMexHistoricalOrderWebCaller();
+                //BitMEXApi bitmex = new BitMEXApi("ZSbLa4SnZk5zh4r08wnPw7RM", "rMeqAzEGaGSLJGphWsUjou-_49-uyzK5wmxnoqnzoAAczeCD");
+                // var orderBook = bitmex.GetOrderBook("XBTUSD", 3);
+                //var test = bitmex.GetOrders();
+                //var test = bitmex.PostOrders();
+
+            }
+
+            var tem = await _orderWebCaller.GetSymbols();
+        }
         private void SetParamsForWebCall()
         {
             _orderParams.Category = Category;

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace APISandbox.Services
 {
-    public class BitMexOrderFactory : IOrderFactory 
+    public class BitMexOrderFactory : IOrderFactory
     {
         public List<HistoricalOrder> PopulateHistoricalOrders(string output)
         {
@@ -35,6 +35,22 @@ namespace APISandbox.Services
             });
 
             return historicalOrderList;
+        }
+
+        public List<Instrument> PopulateInstrumentList(string output)
+        {
+            var instrumentList = new List<Instrument>();
+            Instrument _instrument = new Instrument();
+            List<BitMexInstrumentList> _orderResult = JsonSerializer.Deserialize<List<BitMexInstrumentList>>(output);
+
+            _orderResult.ForEach(r =>
+            {
+                _instrument = new Instrument();
+                _instrument.Symbol = r.symbol;
+                instrumentList.Add(_instrument);
+            });
+
+            return instrumentList;
         }
     }
 }

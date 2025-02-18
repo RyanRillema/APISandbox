@@ -136,5 +136,9 @@ namespace APISandbox.Services
             return string.Join("&", list);
         }
 
+        public Task<List<Instrument>> GetSymbols()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
