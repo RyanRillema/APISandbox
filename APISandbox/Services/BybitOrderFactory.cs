@@ -26,6 +26,7 @@ namespace APISandbox.Services
                 _historicalOrder.Qty = double.Parse(r.Qty, System.Globalization.CultureInfo.InvariantCulture);
                 _historicalOrder.Avgprice = double.Parse(r.AvgPrice, System.Globalization.CultureInfo.InvariantCulture);
                 _historicalOrder.Symbol = r.Symbol;
+                _historicalOrder.Side = r.Side;
                 historicalOrderList.Add(_historicalOrder);
             });
 

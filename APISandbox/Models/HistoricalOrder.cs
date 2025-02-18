@@ -6,6 +6,7 @@
         public string Timestamp;
         public string Symbol;
         public string Ordertype;
+        public string Side;
         public double Avgprice;
         public double Price;
         public string Orderstatus;

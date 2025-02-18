@@ -2,6 +2,8 @@
 using APISandbox.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
@@ -73,29 +75,32 @@ namespace APISandbox.Services
         private void AddGetRequestHeadersForAuthentication(HttpRequestMessage request, string body)
         {
             string expires = GetExpires().ToString();
-            string message = "GET" + request.RequestUri + expires + body;
+            string message = "GET" + request.RequestUri + expires;
             string signatureString = CreateSign(message);
 
             request.Headers.Add("api-expires", expires);
             request.Headers.Add("api-key", "ZSbLa4SnZk5zh4r08wnPw7RM");
             request.Headers.Add("api-signature", signatureString);
-        }
+
+        }        
         private Dictionary<string, string> CreateParams()
         {
             var param = new Dictionary<string, string>();
-            //param["symbol"] = "BTCUSD";
+            string startDate = _params.StartTime.Date.ToString().Substring(0,10).Replace("/", "%2F"); //{year}%2F{month}%2F{day}
+            string endDate = _params.EndTime.Date.ToString().Substring(0, 10).Replace("/", "%2F"); //{year}%2F{month}%2F{day}
+
+            //param["symbol"] = "XBTUSD";
             //param["filter"] = "{\"open\":true}";
             //param["columns"] = "";
-            //param["count"] = 100.ToString();
+            param["count"] = 100.ToString();
             //param["start"] = 0.ToString();
             //param["reverse"] = false.ToString();
-            //param["startTime"] = "";
-            //param["endTime"] = "";
-
-            //string category = _params.Category.ToString();
-
+            param["startTime"] = startDate;
+            param["endTime"] = endDate;
             return param;
+
         }
+
         private string CreateSign(string message)
         {
             byte[] keyByte = Encoding.UTF8.GetBytes("rMeqAzEGaGSLJGphWsUjou-_49-uyzK5wmxnoqnzoAAczeCD");

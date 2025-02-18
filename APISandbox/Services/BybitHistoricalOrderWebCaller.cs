@@ -79,10 +79,16 @@ namespace APISandbox.Services
         }
         private Dictionary<string, string> CreateParams()
         {
-            //return new() { { "api_key", "BqvWkuqyIrWRosPqO6" }, { "category", "spot" }, {"recv_window","20000"},{ "timestamp", DateTime.UtcNow.ToString() } };
-            // , { "timestamp", DateTime.UtcNow.AddMonths(-2).ToString() }
-            string category = _params.Category.ToString();
-            return new() { { "category", _params.Category.ToString() } };
+            var param = new Dictionary<string, string>();
+
+            string startTime = Convert.ToInt64((_params.StartTime - new DateTime(1970, 01, 01)).TotalMilliseconds).ToString();
+            string endTime = Convert.ToInt64((_params.EndTime - new DateTime(1970, 01, 01)).TotalMilliseconds).ToString();
+
+            param["category"] = _params.Category.ToString();
+            param["startTime"] = startTime;
+            param["endTime"] = endTime;
+
+            return param;
         }
         private string CreateSign(string message)
         {

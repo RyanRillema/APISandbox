@@ -8,11 +8,13 @@
              x:DataType="vm:OrderGridViewModel">
   
     <StackPanel>
-      <Grid ColumnDefinitions="200,Auto">
-        <Grid RowDefinitions="50,Auto,Auto"  Grid.Row="0" Grid.Column="0">
+      <Grid ColumnDefinitions="300,Auto">
+        <Grid RowDefinitions="50,Auto,Auto,Auto,Auto"  Grid.Row="0" Grid.Column="0">
           <Button Content="Go" Command="{Binding GetOrderHistoryCommand}" Grid.Row="0" Grid.Column="0" />
           <ComboBox ItemsSource="{Binding ExchangeList}" SelectedItem="{Binding Exchange}" Grid.Row="1" Grid.Column="0" />
           <ComboBox ItemsSource="{Binding CategoryList}" SelectedItem="{Binding Category}" Grid.Row="2" Grid.Column="0" />
+          <DatePicker SelectedDate="{Binding StartDate}" Grid.Row="3" Grid.Column="0" />
+          <DatePicker SelectedDate="{Binding EndDate}" Grid.Row="4" Grid.Column="0" />
         </Grid>
         <ItemsControl Grid.Row="0" Grid.Column="1" ItemsSource="{Binding OrderList}">
             <ItemsControl.ItemTemplate>

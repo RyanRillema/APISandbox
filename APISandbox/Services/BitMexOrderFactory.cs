@@ -30,6 +30,7 @@ namespace APISandbox.Services
                 _historicalOrder.Qty = r.OrderQty;
                 _historicalOrder.Avgprice = r.AvgPx;
                 _historicalOrder.Symbol = r.Symbol;
+                _historicalOrder.Side = r.Side;
                 historicalOrderList.Add(_historicalOrder);
             });
 

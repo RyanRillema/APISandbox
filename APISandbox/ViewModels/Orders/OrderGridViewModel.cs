@@ -1,11 +1,15 @@
 ﻿using APISandbox.Interfaces;
 using APISandbox.Models;
 using APISandbox.Services;
+using BitMEX;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using static APISandbox.Models.OrderEnums;
 
 namespace APISandbox.ViewModels.Orders
 {
@@ -16,19 +20,24 @@ namespace APISandbox.ViewModels.Orders
         public ObservableCollection<RJROrderViewModel> OrderList { get; } = new();
 
         [ObservableProperty]
-        private Category _category = Models.Category.spot;
+        private Category _category = Category.spot;
         [ObservableProperty]
-        private Exchange _exchange = Models.Exchange.BitMex;
+        private Exchange _exchange = Exchange.BitMex;
+        [ObservableProperty]
+        private string _startDate = DateTime.Now.ToString();
+        [ObservableProperty]
+        private string _endDate = DateTime.Now.ToString();
 
         HistoricalOrderWebCallerParams _orderParams = new HistoricalOrderWebCallerParams();
-        IHistoricalOrderWebCaller _orderWebCaller; // = new BitMexHistoricalOrderWebCaller();
+        IHistoricalOrderWebCaller _orderWebCaller;
 
         public OrderGridViewModel()
         {
-            CategoryList.Add(Models.Category.spot);
-            CategoryList.Add(Models.Category.linear);
-            ExchangeList.Add(Models.Exchange.Bybit);
-            ExchangeList.Add(Models.Exchange.BitMex);
+            // RJR Look for a way to populate all enums
+            CategoryList.Add(Category.spot);
+            CategoryList.Add(Category.linear);
+            ExchangeList.Add(Exchange.Bybit);
+            ExchangeList.Add(Exchange.BitMex);
         }
 
         [RelayCommand]
@@ -44,6 +53,11 @@ namespace APISandbox.ViewModels.Orders
             else if(Exchange == Exchange.BitMex)
             {
                 _orderWebCaller = new BitMexHistoricalOrderWebCaller();
+                //BitMEXApi bitmex = new BitMEXApi("ZSbLa4SnZk5zh4r08wnPw7RM", "rMeqAzEGaGSLJGphWsUjou-_49-uyzK5wmxnoqnzoAAczeCD");
+                // var orderBook = bitmex.GetOrderBook("XBTUSD", 3);
+                //var test = bitmex.GetOrders();
+                //var test = bitmex.PostOrders();
+
             }
 
             orders = await _orderWebCaller.GetOrderHistory(_orderParams);
@@ -61,6 +75,13 @@ namespace APISandbox.ViewModels.Orders
         private void SetParamsForWebCall()
         {
             _orderParams.Category = Category;
+            _orderParams.Exchange = Exchange;
+
+            StartDate = StartDate.Substring(0, 19);
+            EndDate = EndDate.Substring(0, 19);
+
+            _orderParams.StartTime = DateTime.Parse(StartDate);
+            _orderParams.EndTime = DateTime.Parse(EndDate);
         }
 
     }

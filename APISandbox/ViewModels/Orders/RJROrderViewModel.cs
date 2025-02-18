@@ -19,6 +19,7 @@ namespace APISandbox.ViewModels.Orders
             Baseprice = setOrder.Baseprice;
             Cumexecqty  = setOrder.Cumexecqty;
             Qty = setOrder.Qty;
+            Side = setOrder.Side;
         }
         
         [ObservableProperty]
@@ -45,6 +46,8 @@ namespace APISandbox.ViewModels.Orders
         private double _cumexecqty;
         [ObservableProperty]
         private double _qty;
+        [ObservableProperty]
+        private string _side;
 
     }
 }
