@@ -6,16 +6,14 @@ namespace APISandbox.Models
 {
     public class HistoricalOrderWebCallerParams
     {
-
+        public Account Account;
         public Category Category;
         public Exchange Exchange;
         public DateTime StartTime;
         public DateTime EndTime;
 
-        public HistoricalOrderWebCallerParams(Category setCategory = Category.spot, Exchange setExchange = Exchange.BitMex)
+        public HistoricalOrderWebCallerParams()
         {
-            Category = setCategory;
-            Exchange = setExchange;
             StartTime = DateTime.Now;
             EndTime = DateTime.Now;
         }

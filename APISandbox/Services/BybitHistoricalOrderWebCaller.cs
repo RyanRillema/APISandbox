@@ -71,8 +71,8 @@ namespace APISandbox.Services
         private void AddGetRequestHeadersForAuthentication(HttpRequestMessage request, string body)
         {
             string timestamp = Convert.ToInt64((DateTime.UtcNow - new DateTime(1970, 01, 01)).TotalMilliseconds).ToString();
-            string message = $"{timestamp}BqvWkuqyIrWRosPqO6{20000}{body}";
-            request.Headers.Add("X-BAPI-API-KEY", "BqvWkuqyIrWRosPqO6");
+            string message = $"{timestamp}{_params.Account.Key}{20000}{body}";
+            request.Headers.Add("X-BAPI-API-KEY", _params.Account.Key);
             request.Headers.Add("X-BAPI-RECV-WINDOW", "20000");
             request.Headers.Add("X-BAPI-SIGN", CreateSign(message));
             request.Headers.Add("X-BAPI-TIMESTAMP", timestamp);
